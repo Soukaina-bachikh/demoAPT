@@ -7,8 +7,7 @@ Form.streamBuffer:=""
 
 var $conv : cs.ConversationEntity
 $conv:=ds.Conversation.new()
-$conv.conversationID:=Generate UUID
 $conv.messages:="[]"
-$conv.startedAt:=String(Current date; ISO date)+"T"+String(Current time)
+$conv.startedAt:=String(Current date; "yyyy-MM-dd")+"T"+String(Current time; "HH:mm:ss")
 $conv.save()
 Form.conversationID:=$conv.conversationID

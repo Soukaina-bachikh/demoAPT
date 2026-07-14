@@ -33,8 +33,8 @@ Try
 
 		$result.appointments.push({\
 			confirmationCode: $appt.confirmationCode;\
-			date: String($appt.date; ISO date);\
-			time: String($appt.time);\
+			date: String($appt.date; "yyyy-MM-dd");\
+			time: String($appt.time; "HH:mm");\
 			staffName: $staffName;\
 			status: $appt.status;\
 			reason: $appt.reason\

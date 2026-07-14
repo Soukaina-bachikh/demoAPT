@@ -54,8 +54,8 @@ Try
 		$result.success:=True
 		$result.appointmentID:=$appt.appointmentID
 		$result.confirmationCode:=$appt.confirmationCode
-		$result.date:=String($appt.date; ISO date)
-		$result.time:=String($appt.time)
+		$result.date:=String($appt.date; "yyyy-MM-dd")
+		$result.time:=String($appt.time; "HH:mm")
 		$result.staffName:=$staff.firstName+" "+$staff.lastName
 	Else
 		$result.error:="Failed to create appointment: "+$status.statusText

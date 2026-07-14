@@ -25,7 +25,7 @@ Try
 			$result.slots.push({\
 				staffID: $staff.staffID;\
 				staffName: $staff.firstName+" "+$staff.lastName;\
-				time: String($slotTime)\
+				time: String($slotTime; "HH:mm")\
 			})
 		End for each
 	End for each

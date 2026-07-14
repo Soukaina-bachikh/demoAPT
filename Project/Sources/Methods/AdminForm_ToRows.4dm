@@ -27,8 +27,8 @@ For each ($appt; $appts)
 	$rows.push({\
 		appointmentID: $appt.appointmentID;\
 		confirmationCode: $appt.confirmationCode;\
-		date: String($appt.date; ISO date);\
-		time: String($appt.time);\
+		date: String($appt.date; "yyyy-MM-dd");\
+		time: String($appt.time; "HH:mm");\
 		clientName: $clientName;\
 		staffName: $staffName;\
 		status: $appt.status;\

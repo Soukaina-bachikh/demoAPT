@@ -6,7 +6,7 @@ If (Form.conversationID#Null) && (Form.conversationID#"")
 	var $conv : cs.ConversationEntity
 	$conv:=ds.Conversation.query("conversationID = :1"; Form.conversationID).first()
 	If ($conv#Null)
-		$conv.closedAt:=String(Current date; ISO date)+"T"+String(Current time)
+		$conv.closedAt:=String(Current date; "yyyy-MM-dd")+"T"+String(Current time; "HH:mm:ss")
 		$conv.save()
 	End if
 End if

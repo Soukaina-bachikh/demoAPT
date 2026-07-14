@@ -36,8 +36,8 @@ Try
 	If ($status.success)
 		$result.success:=True
 		$result.confirmationCode:=$appt.confirmationCode
-		$result.date:=String($appt.date; ISO date)
-		$result.time:=String($appt.time)
+		$result.date:=String($appt.date; "yyyy-MM-dd")
+		$result.time:=String($appt.time; "HH:mm")
 	Else
 		$result.error:="Failed to reschedule appointment: "+$status.statusText
 	End if

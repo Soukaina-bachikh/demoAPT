@@ -31,8 +31,8 @@ Try
 			$result.found:=True
 			$result.staffID:=$staff.staffID
 			$result.staffName:=$staff.firstName+" "+$staff.lastName
-			$result.date:=String($searchDate; ISO date)
-			$result.time:=String($freeSlots[0])
+			$result.date:=String($searchDate; "yyyy-MM-dd")
+			$result.time:=String($freeSlots[0]; "HH:mm")
 		End if
 
 		$searchDate:=$searchDate+1

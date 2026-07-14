@@ -21,8 +21,8 @@ Try
 	$result.found:=True
 	$result.appointmentID:=$appt.appointmentID
 	$result.confirmationCode:=$appt.confirmationCode
-	$result.date:=String($appt.date; ISO date)
-	$result.time:=String($appt.time)
+	$result.date:=String($appt.date; "yyyy-MM-dd")
+	$result.time:=String($appt.time; "HH:mm")
 	$result.duration:=$appt.duration
 	$result.reason:=$appt.reason
 	$result.status:=$appt.status

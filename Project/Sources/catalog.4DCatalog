@@ -3,7 +3,7 @@
 <base name="demoAPT" uuid="E43E6791B65846969210F8243D55FC2C" collation_locale="en">
 	<schema name="DEFAULT_SCHEMA"/>
 	<table name="Staff" uuid="15B059164A6142E48ABD901230445C4A" id="1">
-		<field name="staffID" uuid="83217C681E0941709CF889F360780087" type="10" limiting_length="36" unique="true" never_null="true" id="1"/>
+		<field name="staffID" uuid="83217C681E0941709CF889F360780087" type="10" unique="true" autogenerate="true" store_as_UUID="true" never_null="true" id="1"/>
 		<field name="firstName" uuid="D4DCEAEA9A3F49B49F291F226F64FC13" type="10" limiting_length="255" never_null="true" id="2"/>
 		<field name="lastName" uuid="D692655058A14531B422D5EE727AA411" type="10" limiting_length="255" never_null="true" id="3"/>
 		<field name="specialty" uuid="740C11EB14114ADDB7871556DB5E9ED0" type="10" limiting_length="255" id="4"/>
@@ -14,7 +14,7 @@
 		<primary_key field_name="staffID" field_uuid="83217C681E0941709CF889F360780087"/>
 	</table>
 	<table name="Client" uuid="36CD3FDA4DF84093B30F95C0E4B24377" id="2">
-		<field name="clientID" uuid="F4379377C6CB4CFAA342E1BB1FAE5064" type="10" limiting_length="36" unique="true" never_null="true" id="1"/>
+		<field name="clientID" uuid="F4379377C6CB4CFAA342E1BB1FAE5064" type="10" unique="true" autogenerate="true" store_as_UUID="true" never_null="true" id="1"/>
 		<field name="firstName" uuid="6F24073939DE441ABA7DC5A3651A5D17" type="10" limiting_length="255" never_null="true" id="2"/>
 		<field name="lastName" uuid="236431B084DA46909AE19ABA977B9713" type="10" limiting_length="255" never_null="true" id="3"/>
 		<field name="email" uuid="4F5DA9985986495CA6FBE27E8C608629" type="10" limiting_length="255" id="4"/>
@@ -23,7 +23,7 @@
 		<primary_key field_name="clientID" field_uuid="F4379377C6CB4CFAA342E1BB1FAE5064"/>
 	</table>
 	<table name="Appointment" uuid="4640256228AB4A08A224EF90FBA5146D" id="3">
-		<field name="appointmentID" uuid="93481AF63CC944F7BEDFF6D40890294A" type="10" limiting_length="36" unique="true" never_null="true" id="1"/>
+		<field name="appointmentID" uuid="93481AF63CC944F7BEDFF6D40890294A" type="10" unique="true" autogenerate="true" store_as_UUID="true" never_null="true" id="1"/>
 		<field name="confirmationCode" uuid="43CE675802B0445D85FBD85A8CCB9B8F" type="10" limiting_length="12" unique="true" never_null="true" id="2"/>
 		<field name="clientID" uuid="DAB8DDB77E014561AC197FF9E824D971" type="10" limiting_length="36" never_null="true" id="3"/>
 		<field name="staffID" uuid="3B9EE9933BEF4F5694A9445E14181222" type="10" limiting_length="36" never_null="true" id="4"/>
@@ -36,7 +36,7 @@
 		<primary_key field_name="appointmentID" field_uuid="93481AF63CC944F7BEDFF6D40890294A"/>
 	</table>
 	<table name="Availability" uuid="4D31F5224F9E4AD9A659F774AA34A718" id="4">
-		<field name="availabilityID" uuid="2C75F42C08E64674894D3494DEF0ABFE" type="10" limiting_length="36" unique="true" never_null="true" id="1"/>
+		<field name="availabilityID" uuid="2C75F42C08E64674894D3494DEF0ABFE" type="10" unique="true" autogenerate="true" store_as_UUID="true" never_null="true" id="1"/>
 		<field name="staffID" uuid="CCBB7D3B88CA4F29BCBE8FF3BCAE4353" type="10" limiting_length="36" never_null="true" id="2"/>
 		<field name="dayOfWeek" uuid="D195952B196F413E8D9FD3C84279AFAA" type="4" never_null="true" id="3"/>
 		<field name="startTime" uuid="71916B69ED4D4344ADD6885F33054136" type="9" never_null="true" id="4"/>
@@ -44,7 +44,7 @@
 		<primary_key field_name="availabilityID" field_uuid="2C75F42C08E64674894D3494DEF0ABFE"/>
 	</table>
 	<table name="Conversation" uuid="4B6515661DAE47AC97B6D3F1B64A4DBB" id="5">
-		<field name="conversationID" uuid="67E1F297524D4745859D372F693C1A32" type="10" limiting_length="36" unique="true" never_null="true" id="1"/>
+		<field name="conversationID" uuid="67E1F297524D4745859D372F693C1A32" type="10" unique="true" autogenerate="true" store_as_UUID="true" never_null="true" id="1"/>
 		<field name="appointmentID" uuid="FD352FF1FDF24AB3A48131726F98B009" type="10" limiting_length="36" id="2"/>
 		<field name="clientID" uuid="2D2E18CEDA2F42A0BD755DA7678F1DFE" type="10" limiting_length="36" id="3"/>
 		<field name="messages" uuid="DB957EB93FEE4B0299B443C7683200F0" type="10" never_null="true" id="4"/>
@@ -67,14 +67,24 @@
 			<table_ref uuid="4640256228AB4A08A224EF90FBA5146D" name="Appointment"/>
 		</field_ref>
 	</index>
-	<index kind="regular" unique_keys="true" uuid="465C1189A29740B986B684693724DBC9" type="7">
-		<field_ref uuid="43CE675802B0445D85FBD85A8CCB9B8F" name="confirmationCode">
+	<index kind="regular" unique_keys="true" uuid="21FF1C3C588144408D05882C0B3A3C42" type="7">
+		<field_ref uuid="93481AF63CC944F7BEDFF6D40890294A" name="appointmentID">
 			<table_ref uuid="4640256228AB4A08A224EF90FBA5146D" name="Appointment"/>
 		</field_ref>
 	</index>
-	<index kind="regular" unique_keys="true" uuid="50B6C2638059449AAA5747A4D7DAAA7C" type="7">
-		<field_ref uuid="67E1F297524D4745859D372F693C1A32" name="conversationID">
-			<table_ref uuid="4B6515661DAE47AC97B6D3F1B64A4DBB" name="Conversation"/>
+	<index kind="regular" unique_keys="true" uuid="2F2F17A5F44343B2B78A60ABB3F65C08" type="7">
+		<field_ref uuid="2C75F42C08E64674894D3494DEF0ABFE" name="availabilityID">
+			<table_ref uuid="4D31F5224F9E4AD9A659F774AA34A718" name="Availability"/>
+		</field_ref>
+	</index>
+	<index kind="regular" unique_keys="true" uuid="3AF9206130EF4005B356065137DF331E" type="7">
+		<field_ref uuid="83217C681E0941709CF889F360780087" name="staffID">
+			<table_ref uuid="15B059164A6142E48ABD901230445C4A" name="Staff"/>
+		</field_ref>
+	</index>
+	<index kind="regular" unique_keys="true" uuid="465C1189A29740B986B684693724DBC9" type="7">
+		<field_ref uuid="43CE675802B0445D85FBD85A8CCB9B8F" name="confirmationCode">
+			<table_ref uuid="4640256228AB4A08A224EF90FBA5146D" name="Appointment"/>
 		</field_ref>
 	</index>
 	<index kind="regular" uuid="5DA3046248794F5DA01D4AD7CA9202AE" type="7">
@@ -107,33 +117,23 @@
 			<table_ref uuid="4D31F5224F9E4AD9A659F774AA34A718" name="Availability"/>
 		</field_ref>
 	</index>
-	<index kind="regular" unique_keys="true" uuid="9C44B4BB97014A3888EEC178ACB9C754" type="7">
-		<field_ref uuid="2C75F42C08E64674894D3494DEF0ABFE" name="availabilityID">
-			<table_ref uuid="4D31F5224F9E4AD9A659F774AA34A718" name="Availability"/>
-		</field_ref>
-	</index>
 	<index kind="regular" uuid="B6A8BE5899DC4D00824A26141CDBEA35" type="7">
 		<field_ref uuid="DAB8DDB77E014561AC197FF9E824D971" name="clientID">
 			<table_ref uuid="4640256228AB4A08A224EF90FBA5146D" name="Appointment"/>
 		</field_ref>
 	</index>
-	<index kind="regular" uuid="DC652AF17E2D482CA38CDA1DC3726344" type="7">
-		<field_ref uuid="4F5DA9985986495CA6FBE27E8C608629" name="email">
+	<index kind="regular" unique_keys="true" uuid="D42434E7658743C19AB4F752083C6951" type="7">
+		<field_ref uuid="F4379377C6CB4CFAA342E1BB1FAE5064" name="clientID">
 			<table_ref uuid="36CD3FDA4DF84093B30F95C0E4B24377" name="Client"/>
 		</field_ref>
 	</index>
-	<index kind="regular" unique_keys="true" uuid="DE41BF97553D4744B178391D4DD58E81" type="7">
-		<field_ref uuid="83217C681E0941709CF889F360780087" name="staffID">
-			<table_ref uuid="15B059164A6142E48ABD901230445C4A" name="Staff"/>
+	<index kind="regular" unique_keys="true" uuid="DB38ADDBF0054C81865F85B6598DB009" type="7">
+		<field_ref uuid="67E1F297524D4745859D372F693C1A32" name="conversationID">
+			<table_ref uuid="4B6515661DAE47AC97B6D3F1B64A4DBB" name="Conversation"/>
 		</field_ref>
 	</index>
-	<index kind="regular" unique_keys="true" uuid="EC109E2899F24D6C99F56ACE1822435E" type="7">
-		<field_ref uuid="93481AF63CC944F7BEDFF6D40890294A" name="appointmentID">
-			<table_ref uuid="4640256228AB4A08A224EF90FBA5146D" name="Appointment"/>
-		</field_ref>
-	</index>
-	<index kind="regular" unique_keys="true" uuid="FC3E04242CDB4CC88845FA5C987BC82A" type="7">
-		<field_ref uuid="F4379377C6CB4CFAA342E1BB1FAE5064" name="clientID">
+	<index kind="regular" uuid="DC652AF17E2D482CA38CDA1DC3726344" type="7">
+		<field_ref uuid="4F5DA9985986495CA6FBE27E8C608629" name="email">
 			<table_ref uuid="36CD3FDA4DF84093B30F95C0E4B24377" name="Client"/>
 		</field_ref>
 	</index>
