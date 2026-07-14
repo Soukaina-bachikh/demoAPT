@@ -6,6 +6,9 @@
 # Claude Code local settings
 .claude/settings.local.json
 
+# Secrets (copy Resources/AIProvider.example.json to Resources/AIProvider.json)
+/Resources/AIProvider.json
+
 # OS cruft
 .DS_Store
 Thumbs.db

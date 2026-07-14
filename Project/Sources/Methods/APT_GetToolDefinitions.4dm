@@ -45,6 +45,19 @@ $tools.push(cs.AIKit.OpenAITool.new({\
 }))
 
 $tools.push(cs.AIKit.OpenAITool.new({\
+	name: "getWeekAvailability";\
+	description: "Lists free slots for a specific staff member across the next 7 days from a date. Use this to proactively suggest alternative days when a specifically requested date/time is not available, instead of just reporting failure.";\
+	parameters: {\
+		type: "object";\
+		properties: {\
+			staffID: {type: "string"; description: "Staff member UUID"};\
+			fromDate: {type: "string"; description: "Optional date to start from, formatted YYYY-MM-DD. Defaults to today."}\
+		};\
+		required: ["staffID"]\
+	}\
+}))
+
+$tools.push(cs.AIKit.OpenAITool.new({\
 	name: "createAppointment";\
 	description: "Books an appointment slot for a resolved client and generates a confirmation code. findClient must be called first.";\
 	parameters: {\

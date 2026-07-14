@@ -5,6 +5,11 @@
 var $result : Object:={found: False}
 
 Try
+	If ($params.staffID=Null) || ($params.staffID="")
+		$result.error:="staffID is required"
+		return $result
+	End if
+
 	var $staff : cs.StaffEntity
 	$staff:=ds.Staff.query("staffID = :1"; $params.staffID).first()
 

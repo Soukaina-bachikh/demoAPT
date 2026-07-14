@@ -69,7 +69,9 @@
 					"fontSize": 12,
 					"fontWeight": "bold",
 					"sizingX": "move",
-					"events": ["onClick"],
+					"events": [
+						"onClick"
+					],
 					"method": "ObjectMethods/btnNewChat.4dm"
 				},
 				"headerRule": {
@@ -90,7 +92,9 @@
 					"width": 800,
 					"height": 473,
 					"sizingX": "grow",
-					"sizingY": "grow"
+					"sizingY": "grow",
+					"methodsAccessibility": "all",
+					"webEngine": "embedded"
 				},
 				"composerRule": {
 					"type": "rectangle",
@@ -117,7 +121,9 @@
 					"borderRadius": 8,
 					"sizingX": "grow",
 					"sizingY": "move",
-					"events": ["onAfterKeystroke"],
+					"events": [
+						"onAfterKeystroke"
+					],
 					"method": "ObjectMethods/messageInput.4dm"
 				},
 				"btnSend": {
@@ -134,11 +140,14 @@
 					"borderRadius": 8,
 					"sizingX": "move",
 					"sizingY": "move",
-					"events": ["onClick"],
+					"events": [
+						"onClick"
+					],
 					"method": "ObjectMethods/btnSend.4dm"
 				}
 			}
 		}
 	],
-	"method": "method.4dm"
+	"method": "method.4dm",
+	"geometryStamp": 1
 }

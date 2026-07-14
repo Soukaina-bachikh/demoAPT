@@ -3,7 +3,7 @@
 #DECLARE()
 
 var $openAI : cs.AIKit.OpenAI
-$openAI:=cs.AIKit.OpenAI.new(GetOption("OPENAI_API_KEY"))
+$openAI:=cs.AIKit.OpenAI.new(APT_GetOpenAIKey)
 
 $openAI.chat.completions.create(Form.chatMessages; {\
 	model: "gpt-4o";\

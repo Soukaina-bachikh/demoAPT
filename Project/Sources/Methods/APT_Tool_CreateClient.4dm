@@ -9,8 +9,8 @@ Try
 	$client:=ds.Client.new()
 	$client.firstName:=$params.firstName
 	$client.lastName:=$params.lastName
-	$client.email:=String($params.email)
-	$client.phone:=String($params.phone)
+	$client.email:=APT_TextOrEmpty($params.email)
+	$client.phone:=APT_TextOrEmpty($params.phone)
 	$client.createdAt:=Current date
 
 	var $status : Object

@@ -62,6 +62,36 @@
 		border-radius: 999px;
 		font-size: 13px;
 	}
+	.slot-suggestions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-top: 10px;
+	}
+	.slot-btn {
+		font-family: inherit;
+		font-size: 13px;
+		font-weight: 600;
+		color: #2451d6;
+		background: #eef2fb;
+		border: 1px solid #b7c9f2;
+		border-radius: 999px;
+		padding: 7px 14px;
+		cursor: pointer;
+	}
+	.slot-btn:hover:not(:disabled) {
+		background: #2451d6;
+		color: #f8f9fb;
+	}
+	.slot-btn:disabled {
+		cursor: default;
+		opacity: 0.5;
+	}
+	.slot-btn.selected {
+		background: #2451d6;
+		color: #f8f9fb;
+		opacity: 1;
+	}
 	.typing {
 		display: inline-block;
 	}
@@ -90,6 +120,10 @@
 		var div = document.createElement("div");
 		div.textContent = text;
 		return div.innerHTML;
+	}
+
+	function escapeAttr(text) {
+		return String(text).replace(/&/g, "&amp;").replace(/"/g, "&quot;");
 	}
 
 	function scrollToBottom() {
@@ -121,12 +155,77 @@
 		return currentAIBubble;
 	}
 
+	function formatDateLabel(dateStr) {
+		try {
+			var d = new Date(dateStr + "T00:00:00");
+			return d.toLocaleDateString(undefined, {weekday: "short", month: "short", day: "numeric"});
+		} catch (e) {
+			return dateStr;
+		}
+	}
+
+	function renderSlotButtonsHTML(data) {
+		if (!data || !data.options || !data.options.length) {
+			return "";
+		}
+		var staffName = data.staffName || "";
+		var html = '<div class="slot-suggestions" data-staff="' + escapeAttr(staffName) + '">';
+		data.options.forEach(function (opt) {
+			var label = formatDateLabel(opt.date) + " · " + opt.time;
+			html += '<button type="button" class="slot-btn" data-date="' + escapeAttr(opt.date) + '" data-time="' + escapeAttr(opt.time) + '">' + escapeHtml(label) + "</button>";
+		});
+		html += "</div>";
+		return html;
+	}
+
 	function formatReply(text) {
-		var escaped = escapeHtml(text);
-		return escaped.replace(/\bAPT-[A-Z0-9]{6}\b/g, function (code) {
+		var slotsHTML = "";
+		var cleanText = text;
+
+		var slotsMatch = /<slots>([\s\S]*?)<\/slots>/.exec(text);
+		if (slotsMatch) {
+			cleanText = text.slice(0, slotsMatch.index) + text.slice(slotsMatch.index + slotsMatch[0].length);
+			try {
+				slotsHTML = renderSlotButtonsHTML(JSON.parse(slotsMatch[1]));
+			} catch (e) {
+				slotsHTML = "";
+			}
+		}
+
+		var escaped = escapeHtml(cleanText.trim());
+		escaped = escaped.replace(/\bAPT-[A-Z0-9]{6}\b/g, function (code) {
 			return '<span class="code-pill">' + code + "</span>";
 		});
+
+		return escaped + slotsHTML;
 	}
+
+	// Clicking a suggested slot sends it as a plain message, same as typing it and
+	// hitting Send - reuses the exact same 4D pipeline via the $4d bridge.
+	// Written without closest()/NodeList.forEach for older web-engine compatibility.
+	messagesEl.addEventListener("click", function (event) {
+		var btn = event.target;
+		while (btn && btn !== messagesEl && (!btn.className || btn.className.indexOf("slot-btn") === -1)) {
+			btn = btn.parentNode;
+		}
+		if (!btn || btn === messagesEl || btn.disabled) {
+			return;
+		}
+
+		var group = btn.parentNode;
+		var staffName = (group && group.getAttribute) ? (group.getAttribute("data-staff") || "") : "";
+		var label = formatDateLabel(btn.getAttribute("data-date"));
+		var time = btn.getAttribute("data-time");
+
+		var buttons = group.getElementsByTagName("button");
+		for (var i = 0; i < buttons.length; i++) {
+			buttons[i].disabled = true;
+		}
+		btn.className += " selected";
+
+		var message = "Book me for " + label + " at " + time + (staffName ? " with " + staffName : "") + ".";
+		window.$4d.APT_Chat_Receive(message);
+	});
 
 	// ---- Called from 4D via WA EXECUTE JAVASCRIPT FUNCTION ----
 
@@ -139,7 +238,12 @@
 	};
 
 	window.streamStart = function () {
-		createAIBubble();
+		// Reuse the existing placeholder bubble if one is already waiting (e.g. a
+		// prior tool-calling round never got filled in with real content yet),
+		// so multi-round tool calls don't leave orphaned "..." bubbles behind.
+		if (!currentAIBubble) {
+			createAIBubble();
+		}
 	};
 
 	window.streamChunk = function (chunk) {

@@ -43,7 +43,7 @@ Try
 	$appt.date:=$requestedDate
 	$appt.time:=$requestedTime
 	$appt.duration:=$staff.slotDuration
-	$appt.reason:=String($params.reason)
+	$appt.reason:=APT_TextOrEmpty($params.reason)
 	$appt.status:="confirmed"
 	$appt.createdAt:=Current date
 

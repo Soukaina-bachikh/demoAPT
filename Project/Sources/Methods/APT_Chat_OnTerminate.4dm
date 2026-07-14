@@ -14,10 +14,10 @@ var $choice : cs.AIKit.OpenAIChoice
 $choice:=$result.choice
 
 If ($choice.finish_reason="tool_calls")
-	Form.chatMessages.push({role: "assistant"; tool_calls: $choice.message.tool_calls})
+	Form.chatMessages.push({role: "assistant"; tool_calls: Form.toolCallsBuffer})
 
 	var $toolCall : Object
-	For each ($toolCall; $choice.message.tool_calls)
+	For each ($toolCall; Form.toolCallsBuffer)
 		var $fnArgs : Object
 		$fnArgs:=JSON Parse($toolCall.function.arguments)
 

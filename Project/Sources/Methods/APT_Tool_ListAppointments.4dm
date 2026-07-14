@@ -6,7 +6,7 @@ var $result : Object:={appointments: []}
 
 Try
 	var $filter : Text
-	$filter:=String($params.filter)
+	$filter:=APT_TextOrEmpty($params.filter)
 
 	var $appts : cs.AppointmentSelection
 	Case of

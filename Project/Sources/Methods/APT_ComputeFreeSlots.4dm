@@ -6,8 +6,9 @@
 
 var $slots : Collection:=[]
 
+// Day number: 1=Sunday..7=Saturday. Availability.dayOfWeek uses ISO: 1=Monday..7=Sunday.
 var $dow : Integer
-$dow:=Day of($date)-1
+$dow:=Day number($date)-1
 If ($dow=0)
 	$dow:=7
 End if

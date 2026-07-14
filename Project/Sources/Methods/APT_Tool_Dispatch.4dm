@@ -11,6 +11,8 @@ Case of
 		$result:=APT_Tool_GetStaffList($args)
 	: ($fnName="getNextAvailable")
 		$result:=APT_Tool_GetNextAvailable($args)
+	: ($fnName="getWeekAvailability")
+		$result:=APT_Tool_GetWeekAvailability($args)
 	: ($fnName="createAppointment")
 		$result:=APT_Tool_CreateAppointment($args)
 	: ($fnName="cancelAppointment")
