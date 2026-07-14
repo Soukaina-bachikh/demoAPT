@@ -1,0 +1,12 @@
+# 4D data & runtime (regenerable / machine-specific)
+/Data/
+/Project/DerivedData/
+/userPreferences.*/
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini

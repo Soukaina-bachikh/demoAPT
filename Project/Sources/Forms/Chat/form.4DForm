@@ -1,0 +1,144 @@
+{
+	"$4d": {
+		"version": "1",
+		"kind": "form"
+	},
+	"windowSizingX": "variable",
+	"windowSizingY": "variable",
+	"windowMinWidth": 800,
+	"windowMinHeight": 600,
+	"windowMaxWidth": 32767,
+	"windowMaxHeight": 32767,
+	"rightMargin": 20,
+	"bottomMargin": 20,
+	"events": [
+		"onLoad",
+		"onPageChange",
+		"onValidate",
+		"onClick",
+		"onDoubleClick",
+		"onOutsideCall",
+		"onBeginDragOver",
+		"onDragOver",
+		"onDrop",
+		"onAfterKeystroke",
+		"onMenuSelect",
+		"onPluginArea",
+		"onAfterEdit",
+		"onTimer",
+		"onBoundVariableChange"
+	],
+	"windowTitle": "Appointment Assistant",
+	"destination": "detailScreen",
+	"pages": [
+		{
+			"objects": {}
+		},
+		{
+			"objects": {
+				"lblTitle": {
+					"type": "text",
+					"text": "Appointment Assistant",
+					"top": 16,
+					"left": 20,
+					"width": 360,
+					"height": 22,
+					"fontSize": 16,
+					"fontWeight": "bold",
+					"stroke": "#12181f"
+				},
+				"lblSubtitle": {
+					"type": "text",
+					"text": "Cardiology · General Medicine · Support",
+					"top": 39,
+					"left": 20,
+					"width": 400,
+					"height": 14,
+					"fontSize": 11,
+					"stroke": "#5b6470"
+				},
+				"btnNewChat": {
+					"type": "button",
+					"text": "New conversation",
+					"top": 18,
+					"left": 660,
+					"width": 122,
+					"height": 28,
+					"fill": "#f5f6f8",
+					"stroke": "#e2e5ea",
+					"fontSize": 12,
+					"fontWeight": "bold",
+					"sizingX": "move",
+					"events": ["onClick"],
+					"method": "ObjectMethods/btnNewChat.4dm"
+				},
+				"headerRule": {
+					"type": "rectangle",
+					"top": 62,
+					"left": 0,
+					"width": 800,
+					"height": 1,
+					"fill": "#e2e5ea",
+					"stroke": "#e2e5ea",
+					"strokeWidth": 0,
+					"sizingX": "grow"
+				},
+				"webArea": {
+					"type": "webArea",
+					"top": 63,
+					"left": 0,
+					"width": 800,
+					"height": 473,
+					"sizingX": "grow",
+					"sizingY": "grow"
+				},
+				"composerRule": {
+					"type": "rectangle",
+					"top": 536,
+					"left": 0,
+					"width": 800,
+					"height": 1,
+					"fill": "#e2e5ea",
+					"stroke": "#e2e5ea",
+					"strokeWidth": 0,
+					"sizingX": "grow",
+					"sizingY": "move"
+				},
+				"messageInput": {
+					"type": "input",
+					"top": 552,
+					"left": 20,
+					"width": 660,
+					"height": 34,
+					"dataSource": "Form.messageText",
+					"placeholder": "Ask about booking, rescheduling, or your appointments...",
+					"fill": "#f5f6f8",
+					"borderStyle": "none",
+					"borderRadius": 8,
+					"sizingX": "grow",
+					"sizingY": "move",
+					"events": ["onAfterKeystroke"],
+					"method": "ObjectMethods/messageInput.4dm"
+				},
+				"btnSend": {
+					"type": "button",
+					"text": "Send",
+					"top": 552,
+					"left": 692,
+					"width": 88,
+					"height": 34,
+					"fill": "#2451d6",
+					"stroke": "#2451d6",
+					"fontSize": 13,
+					"fontWeight": "bold",
+					"borderRadius": 8,
+					"sizingX": "move",
+					"sizingY": "move",
+					"events": ["onClick"],
+					"method": "ObjectMethods/btnSend.4dm"
+				}
+			}
+		}
+	],
+	"method": "method.4dm"
+}
