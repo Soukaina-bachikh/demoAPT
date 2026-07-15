@@ -5,11 +5,21 @@
 var $result : Object:={success: False}
 
 Try
+	var $firstName : Text
+	var $lastName : Text
+	$firstName:=APT_TitleCase($params.firstName)
+	$lastName:=APT_TitleCase($params.lastName)
+
+	If ($firstName="") || ($lastName="")
+		$result.error:="Both firstName and lastName are required to create a client - ask the user for whichever is missing."
+		return $result
+	End if
+
 	var $client : cs.ClientEntity
 	$client:=ds.Client.new()
-	$client.firstName:=$params.firstName
-	$client.lastName:=$params.lastName
-	$client.email:=APT_TextOrEmpty($params.email)
+	$client.firstName:=$firstName
+	$client.lastName:=$lastName
+	$client.email:=Lowercase(APT_TextOrEmpty($params.email))
 	$client.phone:=APT_TextOrEmpty($params.phone)
 	$client.createdAt:=Current date
 

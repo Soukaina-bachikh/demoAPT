@@ -5,26 +5,17 @@
 var $result : Object:={found: False; client: Null}
 
 Try
-	var $clients : cs.ClientSelection
+	var $match : cs.ClientEntity
+	$match:=APT_FindClientEntity($params)
 
-	If ($params.email#Null) && ($params.email#"")
-		$clients:=ds.Client.query("email = :1"; $params.email)
-	Else If ($params.phone#Null) && ($params.phone#"")
-		$clients:=ds.Client.query("phone = :1"; $params.phone)
-	Else If ($params.name#Null) && ($params.name#"")
-		$clients:=ds.Client.query("firstName = :1 or lastName = :1 or (firstName+' '+lastName) = :1"; $params.name)
-	End if
-
-	If ($clients#Null) && ($clients.length>0)
-		var $client : cs.ClientEntity
-		$client:=$clients.first()
+	If ($match#Null)
 		$result.found:=True
 		$result.client:={\
-			clientID: $client.clientID;\
-			firstName: $client.firstName;\
-			lastName: $client.lastName;\
-			email: $client.email;\
-			phone: $client.phone\
+			clientID: $match.clientID;\
+			firstName: $match.firstName;\
+			lastName: $match.lastName;\
+			email: $match.email;\
+			phone: $match.phone\
 		}
 	End if
 Catch

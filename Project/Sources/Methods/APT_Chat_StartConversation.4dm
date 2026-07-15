@@ -4,6 +4,8 @@
 
 Form.chatMessages:=[{role: "system"; content: APT_SystemPrompt}]
 Form.streamBuffer:=""
+Form.currentClientID:=""
+Form.currentAppointmentID:=""
 
 var $conv : cs.ConversationEntity
 $conv:=ds.Conversation.new()

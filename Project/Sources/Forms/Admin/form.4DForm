@@ -61,7 +61,7 @@
 					"type": "rectangle",
 					"top": 74,
 					"left": 0,
-					"width": 900,
+					"width": 965,
 					"height": 1,
 					"fill": "#e2e5ea",
 					"stroke": "#e2e5ea",
@@ -72,7 +72,7 @@
 					"type": "input",
 					"top": 90,
 					"left": 24,
-					"width": 240,
+					"width": 328,
 					"height": 32,
 					"dataSource": "Form.searchQuery",
 					"placeholder": "Search by code or client name...",
@@ -84,11 +84,11 @@
 					"type": "button",
 					"text": "Search",
 					"top": 90,
-					"left": 272,
+					"left": 372,
 					"width": 76,
 					"height": 32,
 					"fill": "#2451d6",
-					"stroke": "#2451d6",
+					"stroke": "#2451D6",
 					"fontSize": 13,
 					"fontWeight": "bold",
 					"borderRadius": 8,
@@ -101,11 +101,11 @@
 					"type": "button",
 					"text": "Upcoming",
 					"top": 90,
-					"left": 360,
+					"left": 525,
 					"width": 96,
 					"height": 32,
 					"fill": "#f5f6f8",
-					"stroke": "#e2e5ea",
+					"stroke": "#008000",
 					"fontSize": 12,
 					"fontWeight": "bold",
 					"borderRadius": 8,
@@ -118,11 +118,11 @@
 					"type": "button",
 					"text": "Past",
 					"top": 90,
-					"left": 460,
+					"left": 628,
 					"width": 76,
 					"height": 32,
 					"fill": "#f5f6f8",
-					"stroke": "#e2e5ea",
+					"stroke": "#ff6347",
 					"fontSize": 12,
 					"fontWeight": "bold",
 					"borderRadius": 8,
@@ -135,11 +135,11 @@
 					"type": "button",
 					"text": "All",
 					"top": 90,
-					"left": 540,
+					"left": 452,
 					"width": 66,
 					"height": 32,
 					"fill": "#f5f6f8",
-					"stroke": "#e2e5ea",
+					"stroke": "#0000CD",
 					"fontSize": 12,
 					"fontWeight": "bold",
 					"borderRadius": 8,
@@ -152,11 +152,11 @@
 					"type": "button",
 					"text": "Cancelled",
 					"top": 90,
-					"left": 610,
+					"left": 710,
 					"width": 96,
 					"height": 32,
 					"fill": "#f5f6f8",
-					"stroke": "#e2e5ea",
+					"stroke": "#ff0000",
 					"fontSize": 12,
 					"fontWeight": "bold",
 					"borderRadius": 8,
@@ -169,7 +169,7 @@
 					"type": "listbox",
 					"top": 138,
 					"left": 24,
-					"width": 500,
+					"width": 576,
 					"height": 460,
 					"sizingX": "grow",
 					"sizingY": "grow",
@@ -190,86 +190,98 @@
 							"name": "Code",
 							"header": {
 								"text": "Code",
-								"name": "Header1"
+								"name": "Header1",
+								"stroke": "#696969"
 							},
 							"dataSource": "This:C1470.confirmationCode",
 							"width": 90,
 							"footer": {
 								"name": "Footer1"
 							},
-							"stroke": "#000000"
+							"stroke": "#000000",
+							"horizontalPadding": 2
 						},
 						{
 							"name": "Date",
 							"header": {
 								"text": "Date",
-								"name": "Header2"
+								"name": "Header2",
+								"stroke": "#696969"
 							},
 							"dataSource": "This:C1470.date",
 							"width": 85,
 							"footer": {
 								"name": "Footer2"
 							},
-							"stroke": "#000000"
+							"stroke": "#000000",
+							"horizontalPadding": 2
 						},
 						{
 							"name": "Time",
 							"header": {
 								"text": "Time",
-								"name": "Header3"
+								"name": "Header3",
+								"stroke": "#696969"
 							},
 							"dataSource": "This:C1470.time",
 							"width": 60,
 							"footer": {
 								"name": "Footer3"
 							},
-							"stroke": "#000000"
+							"stroke": "#000000",
+							"horizontalPadding": 2
 						},
 						{
 							"name": "Client",
 							"header": {
 								"text": "Client",
-								"name": "Header4"
+								"name": "Header4",
+								"stroke": "#696969"
 							},
 							"dataSource": "This:C1470.clientName",
 							"width": 120,
 							"footer": {
 								"name": "Footer4"
 							},
-							"stroke": "#000000"
+							"stroke": "#000000",
+							"horizontalPadding": 2
 						},
 						{
 							"name": "Staff",
 							"header": {
 								"text": "Staff",
-								"name": "Header5"
+								"name": "Header5",
+								"stroke": "#696969"
 							},
 							"dataSource": "This:C1470.staffName",
 							"width": 120,
 							"footer": {
 								"name": "Footer5"
 							},
-							"stroke": "#000000"
+							"stroke": "#000000",
+							"horizontalPadding": 2
 						},
 						{
 							"name": "Status",
 							"header": {
 								"text": "Status",
-								"name": "Header6"
+								"name": "Header6",
+								"stroke": "#696969"
 							},
 							"dataSource": "This:C1470.status",
 							"width": 85,
 							"footer": {
 								"name": "Footer6"
 							},
-							"stroke": "#000000"
+							"stroke": "#000000",
+							"horizontalPadding": 2
 						}
 					]
 				},
 				"detailPanel": {
 					"type": "rectangle",
 					"top": 138,
-					"left": 540,
+					"left": 620,
 					"width": 340,
 					"height": 460,
 					"fill": "#ffffff",
@@ -281,7 +293,7 @@
 				"detailHeader": {
 					"type": "rectangle",
 					"top": 138,
-					"left": 540,
+					"left": 620,
 					"width": 340,
 					"height": 48,
 					"fill": "#2451d6",
@@ -293,7 +305,7 @@
 					"type": "text",
 					"text": "Appointment detail",
 					"top": 154,
-					"left": 560,
+					"left": 640,
 					"width": 300,
 					"height": 20,
 					"fontSize": 14,
@@ -305,7 +317,7 @@
 					"type": "text",
 					"text": "Code",
 					"top": 206,
-					"left": 560,
+					"left": 640,
 					"width": 120,
 					"height": 18,
 					"fontSize": 13,
@@ -315,7 +327,7 @@
 				"txtCode": {
 					"type": "input",
 					"top": 204,
-					"left": 700,
+					"left": 780,
 					"width": 160,
 					"height": 20,
 					"dataSource": "Form.currentAppointment.confirmationCode",
@@ -331,7 +343,7 @@
 				"sepCode": {
 					"type": "rectangle",
 					"top": 234,
-					"left": 560,
+					"left": 640,
 					"width": 300,
 					"height": 1,
 					"fill": "#e2e5ea",
@@ -343,7 +355,7 @@
 					"type": "text",
 					"text": "Date / Time",
 					"top": 246,
-					"left": 560,
+					"left": 640,
 					"width": 120,
 					"height": 18,
 					"fontSize": 13,
@@ -353,7 +365,7 @@
 				"txtDate": {
 					"type": "input",
 					"top": 244,
-					"left": 640,
+					"left": 720,
 					"width": 100,
 					"height": 20,
 					"dataSource": "Form.currentAppointment.date",
@@ -369,7 +381,7 @@
 				"txtTime": {
 					"type": "input",
 					"top": 244,
-					"left": 740,
+					"left": 820,
 					"width": 120,
 					"height": 20,
 					"dataSource": "Form.currentAppointment.time",
@@ -385,7 +397,7 @@
 				"sepWhen": {
 					"type": "rectangle",
 					"top": 274,
-					"left": 560,
+					"left": 640,
 					"width": 300,
 					"height": 1,
 					"fill": "#e2e5ea",
@@ -397,7 +409,7 @@
 					"type": "text",
 					"text": "Client",
 					"top": 286,
-					"left": 560,
+					"left": 640,
 					"width": 120,
 					"height": 18,
 					"fontSize": 13,
@@ -407,7 +419,7 @@
 				"txtClient": {
 					"type": "input",
 					"top": 284,
-					"left": 700,
+					"left": 780,
 					"width": 160,
 					"height": 20,
 					"dataSource": "Form.currentAppointment.clientName",
@@ -423,7 +435,7 @@
 				"sepClient": {
 					"type": "rectangle",
 					"top": 314,
-					"left": 560,
+					"left": 640,
 					"width": 300,
 					"height": 1,
 					"fill": "#e2e5ea",
@@ -435,7 +447,7 @@
 					"type": "text",
 					"text": "Staff",
 					"top": 326,
-					"left": 560,
+					"left": 640,
 					"width": 120,
 					"height": 18,
 					"fontSize": 13,
@@ -445,7 +457,7 @@
 				"txtStaff": {
 					"type": "input",
 					"top": 324,
-					"left": 700,
+					"left": 780,
 					"width": 160,
 					"height": 20,
 					"dataSource": "Form.currentAppointment.staffName",
@@ -461,7 +473,7 @@
 				"sepStaff": {
 					"type": "rectangle",
 					"top": 354,
-					"left": 560,
+					"left": 640,
 					"width": 300,
 					"height": 1,
 					"fill": "#e2e5ea",
@@ -473,7 +485,7 @@
 					"type": "text",
 					"text": "Status",
 					"top": 366,
-					"left": 560,
+					"left": 640,
 					"width": 120,
 					"height": 18,
 					"fontSize": 13,
@@ -483,7 +495,7 @@
 				"txtStatus": {
 					"type": "input",
 					"top": 364,
-					"left": 700,
+					"left": 780,
 					"width": 160,
 					"height": 20,
 					"dataSource": "Form.currentAppointment.status",
@@ -500,7 +512,7 @@
 				"sepStatus": {
 					"type": "rectangle",
 					"top": 394,
-					"left": 560,
+					"left": 640,
 					"width": 300,
 					"height": 1,
 					"fill": "#e2e5ea",
@@ -512,7 +524,7 @@
 					"type": "text",
 					"text": "Reason",
 					"top": 406,
-					"left": 560,
+					"left": 640,
 					"width": 300,
 					"height": 18,
 					"fontSize": 13,
@@ -522,7 +534,7 @@
 				"txtReason": {
 					"type": "input",
 					"top": 426,
-					"left": 560,
+					"left": 640,
 					"width": 300,
 					"height": 60,
 					"dataSource": "Form.currentAppointment.reason",
@@ -539,7 +551,7 @@
 					"type": "button",
 					"text": "Cancel appointment",
 					"top": 538,
-					"left": 560,
+					"left": 640,
 					"width": 300,
 					"height": 36,
 					"fill": "#d93b3b",
@@ -564,5 +576,6 @@
 		"views": {
 			"View 1": {}
 		}
-	}
+	},
+	"geometryStamp": 64
 }

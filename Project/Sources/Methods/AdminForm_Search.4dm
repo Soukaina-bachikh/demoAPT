@@ -7,12 +7,26 @@ If (Form.searchQuery="")
 	return
 End if
 
+var $query : Text
+$query:=Trim(Form.searchQuery)
+
 var $appts : cs.AppointmentSelection
-$appts:=ds.Appointment.query("confirmationCode = :1"; Uppercase(Form.searchQuery))
+$appts:=ds.Appointment.query("confirmationCode = :1"; "@"+Uppercase($query)+"@")
 
 If ($appts.length=0)
+	// ORDA's query() mini-language doesn't support inline concatenation expressions
+	// like (firstName+' '+lastName), so a full name has to be split and matched
+	// against both fields with separate placeholders. "@" is the wildcard for
+	// partial/contains matching.
 	var $clients : cs.ClientSelection
-	$clients:=ds.Client.query("firstName = :1 or lastName = :1 or (firstName+' '+lastName) = :1"; Form.searchQuery)
+	var $nameParts : Collection
+	$nameParts:=Split string($query; " ")
+
+	If ($nameParts.length>=2)
+		$clients:=ds.Client.query("firstName = :1 and lastName = :2"; "@"+$nameParts[0]+"@"; "@"+$nameParts[$nameParts.length-1]+"@")
+	Else
+		$clients:=ds.Client.query("firstName = :1 or lastName = :1"; "@"+$query+"@")
+	End if
 
 	If ($clients.length>0)
 		$appts:=ds.Appointment.query("clientID IN :1"; $clients.extract("clientID"))

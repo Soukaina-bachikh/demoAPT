@@ -24,6 +24,15 @@ If ($choice.finish_reason="tool_calls")
 		var $toolResult : Object
 		$toolResult:=APT_Tool_Dispatch($toolCall.function.name; $fnArgs)
 
+		// Link this conversation to the client once identified/registered,
+		// and to the appointment once one is booked.
+		If ($toolResult.client#Null)
+			Form.currentClientID:=$toolResult.client.clientID
+		End if
+		If ($toolCall.function.name="createAppointment") && ($toolResult.success)
+			Form.currentAppointmentID:=$toolResult.appointmentID
+		End if
+
 		Form.chatMessages.push({\
 			role: "tool";\
 			tool_call_id: $toolCall.id;\
@@ -47,6 +56,12 @@ Else
 	$conv:=ds.Conversation.query("conversationID = :1"; Form.conversationID).first()
 	If ($conv#Null)
 		$conv.messages:=JSON Stringify(Form.chatMessages)
+		If (Form.currentClientID#"")
+			$conv.clientID:=Form.currentClientID
+		End if
+		If (Form.currentAppointmentID#"")
+			$conv.appointmentID:=Form.currentAppointmentID
+		End if
 		$conv.save()
 	End if
 End if
