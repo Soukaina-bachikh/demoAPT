@@ -25,8 +25,8 @@
 	<table name="Appointment" uuid="4640256228AB4A08A224EF90FBA5146D" id="3">
 		<field name="appointmentID" uuid="93481AF63CC944F7BEDFF6D40890294A" type="10" unique="true" autogenerate="true" store_as_UUID="true" never_null="true" id="1"/>
 		<field name="confirmationCode" uuid="43CE675802B0445D85FBD85A8CCB9B8F" type="10" limiting_length="12" unique="true" never_null="true" id="2"/>
-		<field name="clientID" uuid="DAB8DDB77E014561AC197FF9E824D971" type="10" limiting_length="36" store_as_UUID="true" never_null="true" id="3"/>
-		<field name="staffID" uuid="3B9EE9933BEF4F5694A9445E14181222" type="10" limiting_length="36" store_as_UUID="true" never_null="true" id="4"/>
+		<field name="clientID" uuid="DAB8DDB77E014561AC197FF9E824D971" type="10" store_as_UUID="true" never_null="true" id="3"/>
+		<field name="staffID" uuid="3B9EE9933BEF4F5694A9445E14181222" type="10" store_as_UUID="true" never_null="true" id="4"/>
 		<field name="date" uuid="86FC6859EA8442A08C8BA4AD7EFC7D56" type="8" never_null="true" id="5"/>
 		<field name="time" uuid="141A3FD850604A5081BEDDB46E97452C" type="9" never_null="true" id="6"/>
 		<field name="duration" uuid="6855D4DC9128483C91D1758A3060FA4C" type="4" never_null="true" id="7"/>
@@ -45,8 +45,8 @@
 	</table>
 	<table name="Conversation" uuid="4B6515661DAE47AC97B6D3F1B64A4DBB" id="5">
 		<field name="conversationID" uuid="67E1F297524D4745859D372F693C1A32" type="10" unique="true" autogenerate="true" store_as_UUID="true" never_null="true" id="1"/>
-		<field name="appointmentID" uuid="FD352FF1FDF24AB3A48131726F98B009" type="10" limiting_length="36" store_as_UUID="true" id="2"/>
-		<field name="clientID" uuid="2D2E18CEDA2F42A0BD755DA7678F1DFE" type="10" limiting_length="36" store_as_UUID="true" id="3"/>
+		<field name="appointmentID" uuid="FD352FF1FDF24AB3A48131726F98B009" type="10" store_as_UUID="true" id="2"/>
+		<field name="clientID" uuid="2D2E18CEDA2F42A0BD755DA7678F1DFE" type="10" store_as_UUID="true" id="3"/>
 		<field name="messages" uuid="DB957EB93FEE4B0299B443C7683200F0" type="10" never_null="true" id="4"/>
 		<field name="startedAt" uuid="7A46B73D46754BCBA0FC8F18553D27ED" type="10" limiting_length="30" never_null="true" id="5"/>
 		<field name="closedAt" uuid="7D41E367A78A4023BF41A787A015ED5E" type="10" limiting_length="30" id="6"/>

@@ -8,7 +8,8 @@ This file documents the **demoAPT** project for anyone (human or AI) working on 
 
 - **Client interface**: `Chat` — a native 4D form (title bar, message input, Send button) wrapping a Web Area used purely as a bubble-rendering surface.
 - **Staff interface**: `Admin` — a native 4D form for searching, filtering, and cancelling appointments.
-- **AI model**: `gpt-4o` via `cs.AIKit.OpenAI`, called with **direct streaming `chat.completions.create()`**, not AIKit's higher-level `chat.create()`/`registerTools()` helper — tool dispatch is handled manually in this project, on purpose (see Architecture below).
+- **Public web presence**: a marketing landing page and a standalone browser-based chat page, served by 4D's built-in web server under the **Kestrel Health** clinic brand (see "Public web presence" below) — a separate, added-alongside surface from the native `Chat` form.
+- **AI model**: `gpt-4o` via `cs.AIKit.OpenAI`, called with **direct streaming `chat.completions.create()`** for the native form, and a **synchronous (non-streaming) `chat.completions.create()`** for the public web endpoint — not AIKit's higher-level `chat.create()`/`registerTools()` helper either way; tool dispatch is handled manually in this project, on purpose (see Architecture below).
 - **Language**: English throughout.
 
 ---
@@ -20,6 +21,7 @@ This file documents the **demoAPT** project for anyone (human or AI) working on 
 3. Copy `Resources/AIProvider.example.json` to `Resources/AIProvider.json` and put your real OpenAI API key in it. **This file is gitignored — never commit it.**
 4. Run `APT_Seed` once from the Method Editor to populate sample data (safe to re-run — it clears existing data after a confirmation prompt).
 5. Run `APT_Open("")` for the client chat window, or `APT_Open("admin")` for the staff panel.
+6. To use the public web presence, enable 4D's web server (Tools/Structure Settings → Web, or the "Start Web Server" toolbar action) with its HTML root folder pointed at `WebFolder/` (created at the project root, alongside `Project/` — 4D's default). Then browse to the server's address (e.g. `http://localhost:8080/index.html`) for the landing page, or `.../webchat.html` for the public chat.
 
 ---
 
@@ -34,18 +36,25 @@ demoAPT/
 │   └── Sources/
 │       ├── catalog.4DCatalog        # 5 tables, hand-authored XML
 │       ├── dependencies.json        # 4D AIKit
-│       ├── Methods/                 # All 35 project methods (flat, APT_ / AdminForm_ prefixed)
+│       ├── Classes/
+│       │   └── DataStore.4dm            # extends DataStoreImplementation, exposes REST fn "chat"
+│       ├── Methods/                 # All project methods (flat, APT_ / AdminForm_ prefixed)
+│       │   ├── APT_WebChat_Handle.4dm      # parses request body, loads/saves the Conversation
+│       │   └── APT_WebChat_RunTurn.4dm     # synchronous (non-streaming) tool-calling loop
 │       └── Forms/
 │           ├── Chat/                # form.4DForm + method.4dm + ObjectMethods/
 │           └── Admin/                # form.4DForm + method.4dm + ObjectMethods/
 ├── Resources/
-│   ├── chat.html                    # Web-area content: pure bubble renderer
+│   ├── chat.html                    # Web-area content: pure bubble renderer (native Chat form)
 │   ├── AIProvider.json              # Real API key (gitignored)
 │   └── AIProvider.example.json      # Committed template
+├── WebFolder/                       # 4D web server HTML root — the public "Kestrel Health" site
+│   ├── index.html                    # Marketing landing page
+│   └── webchat.html                  # Standalone public chat page (fetch()-based, not $4d bridge)
 └── Data/                            # Actual database files (gitignored)
 ```
 
-There are **no custom classes** in this project (`Project/Sources/Classes/` doesn't exist). Both forms use the classic plain `Form`-object + `Case of (FORM Event.code = ...)` pattern — see "4D gotchas" below for why.
+The only custom class in this project is `Project/Sources/Classes/DataStore.4dm`, which extends `DataStoreImplementation` purely to expose one REST function (`chat`) for the public web chat — see "Public web presence" below. Both forms still use the classic plain `Form`-object + `Case of (FORM Event.code = ...)` pattern — see "4D gotchas" below for why.
 
 ---
 
@@ -107,7 +116,7 @@ OpenAI streams `tool_calls` fragmented across multiple chunks, tagged by `index`
 | `getAppointmentDetails` | Full detail by internal UUID |
 | `getAppointmentByCode` | Lookup by `APT-XXXXXX` confirmation code |
 | `findClient` | Search by name/email/phone — **always called before createAppointment** |
-| `createClient` | Register new client — defensively re-checks for a duplicate itself (see below), not just relying on the model calling `findClient` first |
+| `createClient` | Register new client — validates firstName/lastName are present; relies on the model calling `findClient` first (no server-side duplicate re-check — see gotchas) |
 
 Tool schemas are built in `APT_GetToolDefinitions` via `cs.AIKit.OpenAITool.new({name; description; parameters})` (the simplified format — no `handler:` key, since this project uses the manual-dispatch pattern, not AIKit's tool-calling helper).
 
@@ -139,6 +148,20 @@ Rule 7 of `APT_SystemPrompt` instructs the model to append a machine-readable bl
 
 ---
 
+## Public web presence ("Kestrel Health")
+
+A fictional clinic brand, invented to make the demo feel like a real product rather than a bare chat window. Served entirely as static files + one dynamic endpoint from 4D's built-in web server — no separate web server process, no build step.
+
+- **`WebFolder/index.html`** — marketing landing page (hero, the 3 seeded specialties/staff, "how it works", footer). Static; served directly by 4D.
+- **`WebFolder/webchat.html`** — standalone public chat page. Unlike the native `Chat` form, this is a **full page** (its own header/composer), and it talks to 4D over ORDA REST via plain HTTP `fetch()`, not the `window.$4d` bridge (there is no bridge available outside a native Web Area). It keeps a `conversationID` in `localStorage` so a reload resumes the same conversation.
+- **`Project/Sources/Classes/DataStore.4dm`** — extends the built-in `DataStoreImplementation` class with one `exposed Function chat($body : Object) : Object`, callable as `POST /rest/$catalog/chat`. This is 4D's ORDA REST mechanism, **not** the legacy `On Web Connection` database method (deliberately not used here — a plain `On Web Connection` handler was tried first and hit an HTTP 405 from 4D's own web server for the POST, since routing custom dynamic endpoints through it needs more plumbing than this project needed; the REST class-function route works out of the box). REST class-function calls take their arguments as **a JSON array of positional parameters** in the POST body — one array entry per declared function parameter, e.g. `[{"conversationID": "...", "message": "..."}]` for the single `$body` parameter here — and 4D wraps whatever the function returns as `{"result": ...}` in the response.
+- **`APT_WebChat_Handle.4dm`** — parses `{conversationID, message}`, loads that `Conversation` row's `messages` (or creates a new row + fresh `[{role:"system", content: APT_SystemPrompt}]` history if `conversationID` is empty/unknown), appends the user message, runs `APT_WebChat_RunTurn`, then persists the updated history/clientID/appointmentID back to the same `Conversation` row `APT_Chat_OnTerminate` writes to for the native form — **both chat surfaces share the same tables, tools, dispatcher, and system prompt.**
+- **`APT_WebChat_RunTurn.4dm`** — the synchronous counterpart to `APT_Chat_Send`/`OnData`/`OnTerminate`. HTTP request/response has no open connection to stream tokens over, so this calls `chat.completions.create(...; {stream: False})` in a loop (capped at 6 rounds) — dispatching tool calls exactly like the native flow — until it gets a non-tool-call reply, then returns the full text in one shot. The public chat page shows a typing-dots placeholder client-side to cover the wait instead of a real token stream.
+
+**Brand reference** (for consistency if extending the landing page): name **Kestrel Health**, tagline "Care that keeps its appointments," palette reuses the native app's Cobalt & Ink tokens (`#2451d6` cobalt / `#12181f` ink / `#5b6470` slate / `#1f9d6b` mint / `#d93b3b` rust), services section lists the 3 seeded staff members (Dr. Jean Martin – Cardiology, Dr. Claire Bernard – General Medicine, Paul Dupuis – Support) — keep it in sync if `APT_Seed` ever adds/renames staff.
+
+---
+
 ## Naming conventions
 
 - **Method prefix**: `APT_` for application methods, `AdminForm_` for Admin-panel-specific helpers.
@@ -148,14 +171,17 @@ Rule 7 of `APT_SystemPrompt` instructs the model to append a machine-readable bl
 
 ## Key rules (enforced via system prompt, `APT_SystemPrompt`)
 
-1. `findClient` before `createAppointment` — never book without a resolved `clientID`.
-2. Never show UUIDs to the user — only the `APT-XXXXXX` code.
-3. Mentioning a confirmation code → call `getAppointmentByCode` immediately.
-4. Always verify availability before booking/rescheduling.
-5. `createClient` only when `findClient` found no match (also defensively enforced in code — see below).
-6. A specific date/time that's unavailable → immediately call `getWeekAvailability` and offer alternatives instead of just reporting failure.
-7. Present concrete options via the `<slots>` marker (max 6), keep prose short.
-8. Today's date is injected fresh into the prompt every turn (`Current date` + weekday name) — the model has no other way to know "today," and will otherwise guess/hallucinate a date.
+1. **Scope guard**: the assistant only handles appointment booking/rescheduling/cancelling/lookup and staff/specialty/availability questions for this clinic. Anything else (general knowledge, roleplay, code, translation, etc.) gets a one-sentence decline + redirect, with **no tool calls** — added specifically to stop the public web chat from being used as a free general-purpose chatbot and running up OpenAI cost.
+2. `findClient` before `createAppointment` — never book without a resolved `clientID`.
+3. Never show UUIDs to the user — only the `APT-XXXXXX` code.
+4. Mentioning a confirmation code → call `getAppointmentByCode` immediately.
+5. Always verify availability before booking/rescheduling.
+6. `createClient` only when `findClient` found no match (this is enforced by the system prompt only — `APT_Tool_CreateClient` does not re-check for a duplicate itself; a prior version did, but it was rolled back — see gotchas).
+7. A specific date/time that's unavailable → immediately call `getWeekAvailability` and offer alternatives instead of just reporting failure.
+8. Present concrete options via the `<slots>` marker (max 6), keep prose short.
+9. Today's date is injected fresh into the prompt every turn (`Current date` + weekday name) — the model has no other way to know "today," and will otherwise guess/hallucinate a date.
+
+**Cost controls beyond the prompt itself**: every `chat.completions.create(...)` call (native streaming, its tool-call continuation, and the web chat's synchronous call) passes `max_tokens: 500` as a hard cap on reply length regardless of prompt compliance, and `APT_WebChat_RunTurn` caps tool-calling rounds at 6 per turn. Rule 1 above reduces *how often* a call is made at all (a scope guard can't prevent the request that triggers the decline — that one message still costs a call — but it stops multi-turn off-topic conversations and tool-call chains from developing).
 
 ---
 
@@ -172,6 +198,11 @@ These cost real debugging time. Don't reintroduce them.
 - **`WA OPEN URL` / `WA EXECUTE JAVASCRIPT FUNCTION` take the web area as a quoted string name with `*` as the first argument** — `WA OPEN URL(*; "webArea"; url)`, `WA EXECUTE JAVASCRIPT FUNCTION(*; "webArea"; "fnName"; $resultVar; ...args)` — not a bare object reference or pointer, and the JS-function variant needs an output variable slot before the actual arguments. Confirmed from a real working 4d-depot example.
 - **`"formClass"` in `form.4DForm` is a real schema key but crashed this project's Form Editor.** It's documented in `formsSchema.json` and used successfully in a real 4d-depot example, but reintroducing it here reliably froze/crashed the app. Both forms use the classic plain-`Form`-object pattern instead. If you're tempted to add it back, test on a throwaway form first.
 - **A form's Web Area defaults to a legacy rendering engine** unless `"webEngine": "embedded"` is set explicitly — the legacy engine may not support modern JS (`Element.closest()`, `NodeList.forEach`). Always set it explicitly, and write JS defensively regardless.
+- **`createClient` does not defensively re-check for a duplicate.** An earlier version added a server-side duplicate check (reusing `APT_FindClientEntity`) inside `APT_Tool_CreateClient`, but it started throwing a vague "there is an issue" error on otherwise-valid input right before a live demo, and the root cause was never diagnosed — it was rolled back to the simpler version (validate firstName/lastName present, create, done) to guarantee a working demo. Duplicate clients can occur again if the model skips `findClient` first. If re-adding dedup, treat it as a fresh, carefully-tested change, not a copy-paste of the old code.
+- **The public web chat's non-streaming AIKit call path is new and less battle-tested than the streaming path.** `APT_WebChat_RunTurn` assumes `$openAI.chat.completions.create(...; {stream: False})` **returns** the `cs.AIKit.OpenAIChatCompletionsResult` directly (with `.choice.message.tool_calls` populated, unlike the streaming terminate result — see above), rather than requiring an `onTerminate` callback. This mirrors typical OpenAI-SDK-style non-streaming behavior but hasn't been exercised as thoroughly in this project as the streaming path has. If the `chat` REST call errors immediately, check this assumption first.
+- **The `On Web Connection` database method rejected our own `fetch()` POST with a raw HTTP 405** (4D's own Wakanda-based error page, not our code) before the request ever reached the method body — routing a custom dynamic POST endpoint through it needs more configuration than a bare method file. Switched to **ORDA REST class functions** instead (`Project/Sources/Classes/DataStore.4dm`, see "Public web presence"), which work out of the box once the web server is running, no extra routing setup needed. Don't reintroduce `On Web Connection` for this without first confirming what that 405 actually required.
+- **The system message must be refreshed every turn, not just set once at conversation start.** Both `APT_Chat_Send` (native) and `APT_WebChat_Handle` (public) originally stashed `{role:"system", content: APT_SystemPrompt}` as message #1 only when a conversation began, then reused that stored history verbatim on every later turn. Two consequences: (1) editing `APT_SystemPrompt` (e.g. adding the scope-restriction rule below) silently didn't apply to any conversation that already existed — the web chat's `localStorage`-persisted `conversationID` made this easy to hit by accident; (2) the injected "today's date" (rule 9) would go stale on any conversation left open across midnight. Fixed by overwriting `messages[0].content` with a fresh `APT_SystemPrompt` call at the start of every turn in both places, instead of trusting what's already there.
+- **A silently-dead HTTP response looks identical to a network failure in the browser.** `webchat.html`'s `fetch()` handler reads the raw response text first and only then attempts `JSON.parse`, surfacing the real HTTP status/body on failure — worth keeping this pattern for any future endpoint, since 4D-side errors (an uncaught exception, a misconfigured route) otherwise just present as a generic "couldn't reach the server" with no clue why.
 - **Hand-authoring `.4DForm` JSON is risky in general.** Several real bugs here only got found by having 4D itself generate/resave a form and diffing against what was hand-written (blank object structure, the `This.property` listbox column convention, etc.). When something in a form doesn't work and the fix isn't obvious, building a minimal version by hand in the actual Form Editor and inspecting the result is more reliable than guessing at JSON.
 
 ---
